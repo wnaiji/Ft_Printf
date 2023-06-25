@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wnaiji <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: walidnaiji <walidnaiji@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 17:46:04 by wnaiji            #+#    #+#              #
-#    Updated: 2022/12/05 18:00:01 by wnaiji           ###   ########.fr        #
+#    Updated: 2023/06/25 18:00:54 by walidnaiji       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,24 +20,31 @@ SRC = ft_printf.c \
 	  ft_printptr.c \
 	  ft_strlen.c
 
-OBJS = $(SRC:.c=.o)
+OBJ_DIR = obj
+OBJS = $(addprefix $(OBJ_DIR)/,$(SRC:.c=.o))
 
 NAME = libftprintf.a
 
 CFLAGS = -Werror -Wextra -Wall
+SUCCESS_MSG = "\033[0;32mCompilation successful. $(NAME) created.\033[0m"
+ERROR_MSG = "\033[0;31mCompilation failed.\033[0m"
 
-.c.o: $(SRC)
-	gcc $(CFLAGS) -I . -c $< -o $(<:.c=.o)
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OBJ_DIR)
+	@gcc $(CFLAGS) -I . -c $< -o $@
+	@printf "\rCompiling: $<"
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
+	@printf "\n"
+	@printf $(SUCCESS_MSG)
 
 all: $(NAME)
 
 clean:
-	rm -rf $(OBJS)
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
